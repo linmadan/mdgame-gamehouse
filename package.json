@@ -1,0 +1,16 @@
+{
+  "name": "mdgame-gamehouse",
+  "version": "0.0.1",
+  "main": "index",
+  "author": {
+    "name": "linmadan",
+    "email": "772181827@qq.com"
+  },
+  "dependencies": {
+    "underscore": ""
+  },
+  "devDependencies": {
+    "mocha": "",
+    "should": ""
+  }
+}
