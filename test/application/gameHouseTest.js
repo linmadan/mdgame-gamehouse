@@ -38,21 +38,18 @@ describe('AGameHouse use case test', function () {
             };
             aGameHouse.on(gameHouse.domainEvent.PLAYER_COMING_IN, function (err, eventData) {
                 eventData.playerID.should.be.eql("linmadan");
-                eventData.name.should.be.eql("linmadan");
                 emitDone();
             });
             aGameHouse.on(gameHouse.domainEvent.PLAYER_COMING_IN_HALL, function (err, eventData) {
                 eventData.maxRoomNumber.should.be.eql(1);
-                eventData.inHousePlayers.should.be.eql({linmadan: "linmadan"});
-                eventData.inGameHallPlayers.should.eql({linmadan: "linmadan"});
+                eventData.inHousePlayers.should.be.eql({linmadan: {}});
+                eventData.inGameHallPlayers.should.eql({linmadan: {}});
                 eventData.openedGameRooms.should.eql({});
                 eventData.playerID.should.be.eql("linmadan");
-                eventData.name.should.be.eql("linmadan");
                 emitDone();
             });
             var playerData = {};
             playerData.playerID = "linmadan";
-            playerData.name = "linmadan";
             aGameHouse.playerComingIn(playerData);
             aGameHouse.removeAllListeners(gameHouse.domainEvent.PLAYER_COMING_IN);
             aGameHouse.removeAllListeners(gameHouse.domainEvent.PLAYER_COMING_IN_HALL);
@@ -65,7 +62,6 @@ describe('AGameHouse use case test', function () {
             });
             var playerData = {};
             playerData.playerID = "linmadan";
-            playerData.name = "linmadan";
             aGameHouse.playerComingIn(playerData);
             aGameHouse.removeAllListeners(gameHouse.domainEvent.PLAYER_COMING_IN);
         });
@@ -94,23 +90,20 @@ describe('AGameHouse use case test', function () {
             };
             aGameHouse.on(gameHouse.domainEvent.PLAYER_LEAVE_HALL, function (err, eventData) {
                 eventData.playerID.should.be.eql("linmadan");
-                eventData.playerName.should.be.eql("linmadan");
                 emitDone();
             });
             aGameHouse.on(gameHouse.domainEvent.PLAYER_COMING_IN_ROOM, function (err, eventData) {
                 eventData.playerID.should.be.eql("linmadan");
-                eventData.playerName.should.be.eql("linmadan");
                 eventData.roomID.should.be.eql("room-1");
                 eventData.roomName.should.be.eql("my room");
                 eventData.roomOwner.should.be.eql("linmadan");
                 eventData.gameName.should.be.eql("50k");
                 eventData.gamePlayerAmount.should.be.eql(2);
-                eventData.gamePlayers.should.eql({linmadan: {name: "linmadan", isReadyGame: false}});
+                eventData.gamePlayers.should.eql({linmadan: {isReadyGame: false}});
                 emitDone();
             });
             aGameHouse.on(gameHouse.domainEvent.OPEN_NEW_ROOM, function (err, eventData) {
                 eventData.playerID.should.be.eql("linmadan");
-                eventData.playerName.should.be.eql("linmadan");
                 eventData.roomID.should.be.eql("room-1");
                 eventData.roomName.should.be.eql("my room");
                 eventData.roomOwner.should.be.eql("linmadan");
@@ -121,7 +114,6 @@ describe('AGameHouse use case test', function () {
             });
             var playerData = {};
             playerData.playerID = "linmadan";
-            playerData.name = "linmadan";
             var roomData = {};
             roomData.roomID = "room-1";
             roomData.roomName = "my room";
@@ -179,20 +171,18 @@ describe('AGameHouse use case test', function () {
             };
             aGameHouse.on(gameHouse.domainEvent.PLAYER_LEAVE_HALL, function (err, eventData) {
                 eventData.playerID.should.be.eql("huhuzhu");
-                eventData.playerName.should.be.eql("huhuzhu");
                 emitDone();
             });
             aGameHouse.on(gameHouse.domainEvent.PLAYER_COMING_IN_ROOM, function (err, eventData) {
                 eventData.playerID.should.be.eql("huhuzhu");
-                eventData.playerName.should.be.eql("huhuzhu");
                 eventData.roomID.should.be.eql("room-1");
                 eventData.roomName.should.be.eql("my room");
                 eventData.roomOwner.should.be.eql("linmadan");
                 eventData.gameName.should.be.eql("50k");
                 eventData.gamePlayerAmount.should.be.eql(2);
                 eventData.gamePlayers.should.eql({
-                    linmadan: {name: "linmadan", isReadyGame: false},
-                    huhuzhu: {name: "huhuzhu", isReadyGame: false}
+                    linmadan: {isReadyGame: false},
+                    huhuzhu: {isReadyGame: false}
                 });
                 emitDone();
             });
@@ -245,7 +235,6 @@ describe('AGameHouse use case test', function () {
         it('should emit "PLAYER_READY_TO_PLAY_GAME" event', function (done) {
             aGameHouse.on(gameHouse.domainEvent.PLAYER_READY_TO_PLAY_GAME, function (err, eventData) {
                 eventData.playerID.should.be.eql("huhuzhu");
-                eventData.playerName.should.be.eql("huhuzhu");
                 eventData.roomID.should.be.eql("room-1");
                 done();
             });
@@ -258,10 +247,7 @@ describe('AGameHouse use case test', function () {
             aGameHouse.on(gameHouse.domainEvent.CAN_START_GAME, function (err, eventData) {
                 eventData.roomID.should.be.eql("room-1");
                 eventData.gameName.should.be.eql("50k");
-                eventData.players.should.eql([{playerID: "linmadan", playerName: "linmadan"}, {
-                    playerID: "huhuzhu",
-                    playerName: "huhuzhu"
-                }]);
+                eventData.players.should.eql([{playerID: "linmadan"}, {playerID: "huhuzhu"}]);
                 done();
             });
             var playerData = {};
@@ -275,8 +261,8 @@ describe('AGameHouse use case test', function () {
             aGameHouse.on(gameHouse.domainEvent.ROOM_PLAYERS_CANCEL_READY, function (err, eventData) {
                 eventData.roomID.should.be.eql("room-1");
                 eventData.gamePlayers.should.eql({
-                    linmadan: {name: "linmadan", isReadyGame: false},
-                    huhuzhu: {name: "huhuzhu", isReadyGame: false}
+                    linmadan: {isReadyGame: false},
+                    huhuzhu: {isReadyGame: false}
                 });
                 done();
             });
@@ -310,7 +296,6 @@ describe('AGameHouse use case test', function () {
         it('should emit "PLAYER_CANCEL_READY" event', function (done) {
             aGameHouse.on(gameHouse.domainEvent.PLAYER_CANCEL_READY, function (err, eventData) {
                 eventData.playerID.should.be.eql("linmadan");
-                eventData.playerName.should.be.eql("linmadan");
                 eventData.roomID.should.be.eql("room-1");
                 done();
             });
@@ -387,8 +372,8 @@ describe('AGameHouse use case test', function () {
                 eventData.gameName.should.be.eql("50k");
                 eventData.gamePlayerAmount.should.be.eql(2);
                 eventData.gamePlayers.should.eql({
-                    linmadan: {name: "linmadan", isReadyGame: false},
-                    huhuzhu: {name: "huhuzhu", isReadyGame: false}
+                    linmadan: {isReadyGame: false},
+                    huhuzhu: {isReadyGame: false}
                 });
                 done();
             });
@@ -421,7 +406,6 @@ describe('AGameHouse use case test', function () {
             };
             aGameHouse.on(gameHouse.domainEvent.PLAYER_LEAVE_ROOM, function (err, eventData) {
                 eventData.playerID.should.be.eql("linmadan");
-                eventData.playerName.should.be.eql("linmadan");
                 eventData.roomID.should.be.eql("room-1");
                 eventData.roomName.should.be.eql("my room");
                 eventData.roomOwner.should.be.eql("huhuzhu");
@@ -431,8 +415,8 @@ describe('AGameHouse use case test', function () {
             });
             aGameHouse.on(gameHouse.domainEvent.PLAYER_COMING_IN_HALL, function (err, eventData) {
                 eventData.maxRoomNumber.should.be.eql(1);
-                eventData.inHousePlayers.should.be.eql({linmadan: "linmadan", huhuzhu: "huhuzhu", uerltd: "uerltd"});
-                eventData.inGameHallPlayers.should.be.eql({linmadan: "linmadan", uerltd: "uerltd"});
+                eventData.inHousePlayers.should.be.eql({linmadan: {}, huhuzhu: {}, uerltd: {}});
+                eventData.inGameHallPlayers.should.be.eql({linmadan: {}, uerltd: {}});
                 eventData.openedGameRooms.should.be.eql({
                     "room-1": {
                         "roomName": "my room",
@@ -443,7 +427,6 @@ describe('AGameHouse use case test', function () {
                     }
                 });
                 eventData.playerID.should.be.eql("linmadan");
-                eventData.name.should.be.eql("linmadan");
                 emitDone();
             });
             var playerData = {};
@@ -476,19 +459,16 @@ describe('AGameHouse use case test', function () {
             });
             var playerData = {};
             playerData.playerID = "noplayer";
-            playerData.name = "noplayer";
             aGameHouse.playerLeave(playerData);
             aGameHouse.removeAllListeners(gameHouse.domainEvent.PLAYER_LEAVE);
         });
         it('should emit "PLAYER_LEAVE" event if player in the game hall', function (done) {
             aGameHouse.on(gameHouse.domainEvent.PLAYER_LEAVE, function (err, eventData) {
                 eventData.playerID.should.be.eql("player1");
-                eventData.playerName.should.be.eql("player1");
                 done();
             });
             var playerData = {};
             playerData.playerID = "player1";
-            playerData.name = "player1";
             aGameHouse.playerComingIn(playerData);
             aGameHouse.playerLeave(playerData);
             aGameHouse.removeAllListeners(gameHouse.domainEvent.PLAYER_LEAVE);
@@ -503,7 +483,6 @@ describe('AGameHouse use case test', function () {
             };
             aGameHouse.on(gameHouse.domainEvent.PLAYER_LEAVE_ROOM, function (err, eventData) {
                 eventData.playerID.should.be.eql("player2");
-                eventData.playerName.should.be.eql("player2");
                 eventData.roomID.should.be.eql("room-2");
                 eventData.roomName.should.be.eql("my room");
                 eventData.roomOwner.should.be.eql("player2");
@@ -513,12 +492,10 @@ describe('AGameHouse use case test', function () {
             });
             aGameHouse.on(gameHouse.domainEvent.PLAYER_LEAVE, function (err, eventData) {
                 eventData.playerID.should.be.eql("player2");
-                eventData.playerName.should.be.eql("player2");
                 emitDone();
             });
             var playerData = {};
             playerData.playerID = "player2";
-            playerData.name = "player2";
             aGameHouse.playerComingIn(playerData);
             var roomData = {};
             roomData.roomID = "room-2";
@@ -542,12 +519,10 @@ describe('AGameHouse use case test', function () {
                 eventData.roomID.should.be.eql("room-2");
                 eventData.gameName.should.be.eql("50k");
                 eventData.playerID.should.be.eql("player3");
-                eventData.playerName.should.be.eql("player3");
                 emitDone();
             });
             aGameHouse.on(gameHouse.domainEvent.PLAYER_LEAVE_ROOM, function (err, eventData) {
                 eventData.playerID.should.be.eql("player3");
-                eventData.playerName.should.be.eql("player3");
                 eventData.roomID.should.be.eql("room-2");
                 eventData.roomName.should.be.eql("my room");
                 eventData.roomOwner.should.be.eql("huhuzhu");
@@ -557,12 +532,10 @@ describe('AGameHouse use case test', function () {
             });
             aGameHouse.on(gameHouse.domainEvent.PLAYER_LEAVE, function (err, eventData) {
                 eventData.playerID.should.be.eql("player3");
-                eventData.playerName.should.be.eql("player3");
                 emitDone();
             });
             var playerData = {};
             playerData.playerID = "huhuzhu";
-            playerData.name = "huhuzhu";
             aGameHouse.playerComingIn(playerData);
             var roomData = {};
             roomData.roomID = "room-2";
@@ -572,7 +545,6 @@ describe('AGameHouse use case test', function () {
             aGameHouse.playerOpenNewRoom(playerData, roomData);
             aGameHouse.playerReadyGame(playerData);
             playerData.playerID = "player3";
-            playerData.name = "player3";
             aGameHouse.playerComingIn(playerData);
             aGameHouse.playerComingInRoom(playerData, roomData);
             aGameHouse.playerReadyGame(playerData);
